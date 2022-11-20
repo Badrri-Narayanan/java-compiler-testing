@@ -1,0 +1,14 @@
+module:io.github.ascopes.jct
+io.github.ascopes.jct.annotations
+io.github.ascopes.jct.assertions
+io.github.ascopes.jct.assertions.impl
+io.github.ascopes.jct.compilers
+io.github.ascopes.jct.compilers.impl
+io.github.ascopes.jct.containers
+io.github.ascopes.jct.containers.impl
+io.github.ascopes.jct.diagnostics
+io.github.ascopes.jct.ex
+io.github.ascopes.jct.junit
+io.github.ascopes.jct.pathwrappers
+io.github.ascopes.jct.pathwrappers.impl
+io.github.ascopes.jct.utils
