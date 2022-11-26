@@ -65,7 +65,14 @@ public final class SpecialLocationUtils {
   public static List<Path> javaRuntimeLocations() {
     // Had to do a load of digging around the OpenJDK compiler implementation to work this out, and
     // I don't know if this will work on all JDK installations yet.
-    return List.of(Path.of(JAVA_RUNTIME_URI).toAbsolutePath());
+
+    var jrtPath = Path.of(JAVA_RUNTIME_URI);
+
+    if (Files.exists(jrtPath)) {
+      return List.of(jrtPath);
+    }
+
+    throw new IllegalArgumentException("xxx");
   }
 
   /**

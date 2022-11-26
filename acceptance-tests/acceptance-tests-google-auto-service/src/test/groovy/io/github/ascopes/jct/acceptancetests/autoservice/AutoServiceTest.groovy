@@ -17,6 +17,7 @@ package io.github.ascopes.jct.acceptancetests.autoservice
 
 
 import io.github.ascopes.jct.compilers.JctCompiler
+import io.github.ascopes.jct.junit.EcjCompilerTest
 import io.github.ascopes.jct.junit.JavacCompilerTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.parallel.Execution
@@ -30,6 +31,7 @@ class AutoServiceTest {
 
   @DisplayName("The AutoService descriptor is created as expected")
   @Execution(ExecutionMode.CONCURRENT)
+  @EcjCompilerTest
   @JavacCompilerTest
   void autoServiceDescriptorIsCreatedAsExpected(JctCompiler compiler) {
     // Given

@@ -94,6 +94,7 @@
  * </code></pre>
  */
 module io.github.ascopes.jct {
+  requires ecj;
   requires java.compiler;
   requires java.management;
   requires jimfs;
@@ -108,6 +109,7 @@ module io.github.ascopes.jct {
   exports io.github.ascopes.jct.assertions;
   exports io.github.ascopes.jct.containers;
   exports io.github.ascopes.jct.compilers;
+  exports io.github.ascopes.jct.compilers.ecj;
   exports io.github.ascopes.jct.compilers.javac;
   exports io.github.ascopes.jct.diagnostics;
   exports io.github.ascopes.jct.ex;
@@ -126,6 +128,7 @@ module io.github.ascopes.jct {
 
   opens io.github.ascopes.jct.assertions to io.github.ascopes.jct.testing;
   opens io.github.ascopes.jct.compilers to io.github.ascopes.jct.testing;
+  opens io.github.ascopes.jct.compilers.ecj to io.github.ascopes.jct.testing;
   opens io.github.ascopes.jct.compilers.javac to io.github.ascopes.jct.testing;
   opens io.github.ascopes.jct.containers to io.github.ascopes.jct.testing;
   opens io.github.ascopes.jct.diagnostics to io.github.ascopes.jct.testing;

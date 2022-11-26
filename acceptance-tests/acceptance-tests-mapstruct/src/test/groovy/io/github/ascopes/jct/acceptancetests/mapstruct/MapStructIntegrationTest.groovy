@@ -16,6 +16,7 @@
 package io.github.ascopes.jct.acceptancetests.mapstruct
 
 import io.github.ascopes.jct.compilers.JctCompiler
+import io.github.ascopes.jct.junit.EcjCompilerTest
 import io.github.ascopes.jct.junit.JavacCompilerTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.parallel.Execution
@@ -33,6 +34,7 @@ class MapStructIntegrationTest {
 
   @DisplayName("MapStruct generates expected mapping code")
   @Execution(ExecutionMode.CONCURRENT)
+  @EcjCompilerTest
   @JavacCompilerTest
   void mapStructGeneratesExpectedMappingCode(JctCompiler compiler) {
     // Given
@@ -74,6 +76,7 @@ class MapStructIntegrationTest {
 
   @DisplayName("MapStruct generates expected mapping code for modules")
   @Execution(ExecutionMode.CONCURRENT)
+  @EcjCompilerTest(modules = true)
   @JavacCompilerTest(modules = true)
   void mapStructGeneratesExpectedMappingCodeForModules(JctCompiler compiler) {
     // Given

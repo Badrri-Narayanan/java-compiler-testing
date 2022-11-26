@@ -15,6 +15,7 @@
  */
 package io.github.ascopes.jct.testing.unit.utils;
 
+import static io.github.ascopes.jct.utils.FileUtils.assertValidRootName;
 import static io.github.ascopes.jct.utils.FileUtils.binaryNameToPackageName;
 import static io.github.ascopes.jct.utils.FileUtils.binaryNameToPath;
 import static io.github.ascopes.jct.utils.FileUtils.binaryNameToSimpleClassName;
@@ -23,11 +24,14 @@ import static io.github.ascopes.jct.utils.FileUtils.packageNameToPath;
 import static io.github.ascopes.jct.utils.FileUtils.pathToBinaryName;
 import static io.github.ascopes.jct.utils.FileUtils.pathToKind;
 import static io.github.ascopes.jct.utils.FileUtils.relativeResourceNameToPath;
+import static io.github.ascopes.jct.utils.FileUtils.repairBinaryName;
 import static io.github.ascopes.jct.utils.FileUtils.resourceNameToPath;
 import static io.github.ascopes.jct.utils.FileUtils.retrieveRequiredUrl;
 import static io.github.ascopes.jct.utils.FileUtils.simpleClassNameToPath;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.in;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
@@ -55,6 +59,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 /**
  * Tests for {@link FileUtils}.
@@ -69,7 +74,7 @@ class FileUtilsTest implements StaticClassTestTemplate {
     return FileUtils.class;
   }
 
-  @DisplayName("Supported paths can be dereferenced to URLs successfully")
+  @DisplayName("retrieveRequiredUrl with a supported path returns the expected result")
   @Test
   void canDereferencePathsToUrls() throws IOException {
     // Given
@@ -89,7 +94,7 @@ class FileUtilsTest implements StaticClassTestTemplate {
     }
   }
 
-  @DisplayName("Unsupported paths throw an IllegalArgumentException when using an unknown scheme")
+  @DisplayName("retrieveRequiredUrl with an invalid scheme throws an IllegalArgumentException")
   @Test
   void throwsIllegalArgumentExceptionIfPathUsesUnknownUriScheme() {
     // Given
@@ -101,6 +106,60 @@ class FileUtilsTest implements StaticClassTestTemplate {
     assertThatThrownBy(() -> retrieveRequiredUrl(path))
         .isInstanceOf(IllegalArgumentException.class)
         .hasCauseInstanceOf(MalformedURLException.class);
+  }
+
+  @DisplayName("repairBinaryName makes the expected changes to paths")
+  @CsvSource({
+      "'', ''",
+      "a, a",
+      "a.b, a.b",
+      "a/b, a.b",
+      "aaa.bbbb, aaa.bbbb",
+      "abc/bcde, abc.bcde",
+      "org.example.foobar., org.example.foobar.",
+      "org.example.foobar, org.example.foobar",
+      "org/example/foobar/, org.example.foobar.",
+      "org/example/foobar, org.example.foobar",
+  })
+  @ParameterizedTest(name = "Expect \"{0}\" to be changed to \"{1}\"")
+  void repairBinaryNameMakesTheExpectedChangesToPaths(String input, String expect) {
+    // Then
+    assertThat(repairBinaryName(input)).isEqualTo(expect);
+  }
+
+  @DisplayName("assertValidRootName succeeds for valid root names")
+  @ValueSource(strings = {
+      "foo",
+      "foo.bar",
+      "foo.bar.baz",
+  })
+  @ParameterizedTest(name = "\"{0}\" is a valid root name")
+  void assertValidRootNameSucceedsForValidRootNames(String rootName) {
+    // Then
+    assertThatCode(() -> assertValidRootName(rootName))
+        .doesNotThrowAnyException();
+  }
+
+  @DisplayName("assertValidRootName fails for invalid root names")
+  @CsvSource({
+      "'', Directory name cannot be blank",
+      "' ', Directory name cannot be blank",
+      "'\t\n', Directory name cannot be blank",
+      "' foo', Directory name cannot begin or end in spaces",
+      "'foo ', Directory name cannot begin or end in spaces",
+      "' foo ', Directory name cannot begin or end in spaces",
+      "' \t\tfoo\t\t', Directory name cannot begin or end in spaces",
+      "foo..bar, Invalid file name provided",
+      "foo/bar, Invalid file name provided",
+      "foo\\bar, Invalid file name provided",
+      "foo\\../bar, Invalid file name provided",
+  })
+  @ParameterizedTest(name = "\"{0}\" is not a valid root name and raises \"{1}\"")
+  void assertValidRootNameFailsForInvalidRootNames(String rootName, String expectedError) {
+    // Then
+    assertThatThrownBy(() -> assertValidRootName(rootName))
+        .isInstanceOf(IllegalArgumentException.class)
+        .hasMessage(expectedError);
   }
 
   @DisplayName("pathToBinaryName throws an IllegalArgumentException for absolute paths")
@@ -129,6 +188,7 @@ class FileUtilsTest implements StaticClassTestTemplate {
   @ParameterizedTest(name = "pathToBinaryName(\"{0}\") should return \"{1}\"")
   void pathToBinaryNameConvertsRelativePathsAsExpected(String input, String expected)
       throws IOException {
+
     try (var fs = newFileSystem()) {
       // Given
       var path = fs.getPath(input);

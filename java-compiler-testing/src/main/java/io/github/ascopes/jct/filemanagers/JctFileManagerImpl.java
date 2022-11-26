@@ -26,6 +26,7 @@ import io.github.ascopes.jct.containers.OutputContainerGroupImpl;
 import io.github.ascopes.jct.containers.PackageContainerGroup;
 import io.github.ascopes.jct.containers.PackageContainerGroupImpl;
 import io.github.ascopes.jct.pathwrappers.PathWrapper;
+import io.github.ascopes.jct.utils.FileUtils;
 import io.github.ascopes.jct.utils.ToStringBuilder;
 import java.io.IOException;
 import java.lang.module.ModuleFinder;
@@ -278,6 +279,7 @@ public final class JctFileManagerImpl implements JctFileManager {
       Kind kind
   ) {
     requireFileManagerToBeOpen();
+    className = FileUtils.repairBinaryName(className);
 
     var group = getExistingPackageOrientedOrOutputGroup(location);
 
@@ -295,6 +297,7 @@ public final class JctFileManagerImpl implements JctFileManager {
       FileObject sibling
   ) {
     requireFileManagerToBeOpen();
+    className = FileUtils.repairBinaryName(className);
 
     var group = getExistingPackageOrientedOrOutputGroup(location);
 
@@ -311,6 +314,7 @@ public final class JctFileManagerImpl implements JctFileManager {
       String relativeName
   ) {
     requireFileManagerToBeOpen();
+    packageName = FileUtils.repairBinaryName(packageName);
 
     var group = getExistingPackageOrientedOrOutputGroup(location);
 
@@ -328,6 +332,7 @@ public final class JctFileManagerImpl implements JctFileManager {
       FileObject sibling
   ) {
     requireFileManagerToBeOpen();
+    packageName = FileUtils.repairBinaryName(packageName);
 
     var group = getExistingPackageOrientedOrOutputGroup(location);
 
@@ -338,6 +343,8 @@ public final class JctFileManagerImpl implements JctFileManager {
 
   @Override
   public Location getLocationForModule(Location location, String moduleName) {
+    moduleName = FileUtils.repairBinaryName(moduleName);
+
     // This checks that the input location is module/output oriented within the constructor,
     // so we don't need to do it here as well.
     return new ModuleLocation(location, moduleName);

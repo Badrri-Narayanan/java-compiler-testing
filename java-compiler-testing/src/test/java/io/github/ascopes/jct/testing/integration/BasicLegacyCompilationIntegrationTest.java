@@ -20,6 +20,7 @@ import static io.github.ascopes.jct.pathwrappers.RamDirectory.newRamDirectory;
 import static io.github.ascopes.jct.pathwrappers.TempDirectory.newTempDirectory;
 
 import io.github.ascopes.jct.compilers.JctCompiler;
+import io.github.ascopes.jct.junit.EcjCompilerTest;
 import io.github.ascopes.jct.junit.JavacCompilerTest;
 import org.junit.jupiter.api.DisplayName;
 
@@ -59,6 +60,7 @@ class BasicLegacyCompilationIntegrationTest {
 
   @DisplayName("I can compile a 'Hello, World!' program using a temp directory")
   @JavacCompilerTest
+  @EcjCompilerTest
   void helloWorldJavacTempDirectory(JctCompiler<?, ?> compiler) {
     var sources = newTempDirectory("sources")
         .createFile("com/example/HelloWorld.java").withContents(

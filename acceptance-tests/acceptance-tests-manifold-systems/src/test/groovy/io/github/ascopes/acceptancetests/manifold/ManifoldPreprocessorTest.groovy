@@ -18,6 +18,8 @@ package io.github.ascopes.acceptancetests.manifold
 import io.github.ascopes.jct.compilers.JctCompiler
 import io.github.ascopes.jct.junit.JavacCompilerTest
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 
 import static io.github.ascopes.jct.assertions.JctAssertions.assertThatCompilation
 import static io.github.ascopes.jct.pathwrappers.TempDirectory.newTempDirectory
@@ -27,6 +29,7 @@ import static org.assertj.core.api.Assertions.assertThat
 @SuppressWarnings('GrUnresolvedAccess')
 class ManifoldPreprocessorTest {
   @DisplayName("Preprocessor produces the expected code when a preprocessor symbol is defined")
+  @Execution(ExecutionMode.SAME_THREAD)
   @JavacCompilerTest(configurers = [ManifoldPluginConfigurer])
   void preprocessorProducesTheExpectedCodeWhenPreprocessorSymbolIsDefined(JctCompiler compiler) {
     // Given
@@ -56,6 +59,7 @@ class ManifoldPreprocessorTest {
   }
 
   @DisplayName("Preprocessor produces the expected code when a preprocessor symbol is undefined")
+  @Execution(ExecutionMode.SAME_THREAD)
   @JavacCompilerTest(configurers = [ManifoldPluginConfigurer])
   void preprocessorProducesTheExpectedCodeWhenPreprocessorSymbolIsUndefined(JctCompiler compiler) {
     // Given
@@ -84,6 +88,7 @@ class ManifoldPreprocessorTest {
   }
 
   @DisplayName("Warning directives produce compiler warnings in JCT")
+  @Execution(ExecutionMode.SAME_THREAD)
   @JavacCompilerTest(configurers = [ManifoldPluginConfigurer])
   void warningDirectivesProduceCompilerWarningsInJct(JctCompiler compiler) {
     // Given
@@ -104,6 +109,7 @@ class ManifoldPreprocessorTest {
   }
 
   @DisplayName("Error directives produce compiler errors in JCT")
+  @Execution(ExecutionMode.CONCURRENT)
   @JavacCompilerTest(configurers = [ManifoldPluginConfigurer])
   void warningDirectivesProduceCompilerErrorsInJct(JctCompiler compiler) {
     // Given

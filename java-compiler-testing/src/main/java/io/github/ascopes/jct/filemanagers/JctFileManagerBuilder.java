@@ -391,10 +391,12 @@ public final class JctFileManagerBuilder {
 
     // Continue preparing the file manager with additional defaults we need.
     var fallbackFs = newFallbackFs(fileManager);
+
     // We have to manually create this one as javac will not attempt to access it lazily. Instead,
     // it will just abort if it is not present. This means we cannot take advantage of the
     // PathLocationRepository creating the roots as we try to access them for this specific case.
     createLocationIfNotPresent(fileManager, fallbackFs, StandardLocation.CLASS_OUTPUT);
+
     // Annotation processors that create files will need this directory to exist if it is to
     // work properly.
     createLocationIfNotPresent(fileManager, fallbackFs, StandardLocation.SOURCE_OUTPUT);

@@ -16,25 +16,33 @@
 package io.github.ascopes.jct.acceptancetests.dagger
 
 import io.github.ascopes.jct.compilers.JctCompiler
+import io.github.ascopes.jct.filemanagers.LoggingMode
+import io.github.ascopes.jct.junit.EcjCompilerTest
 import io.github.ascopes.jct.junit.JavacCompilerTest
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 
 import static io.github.ascopes.jct.assertions.JctAssertions.assertThatCompilation
-import static io.github.ascopes.jct.pathwrappers.RamDirectory.newRamDirectory
+import static io.github.ascopes.jct.pathwrappers.TempDirectory.newTempDirectory
 
 @DisplayName("Dagger acceptance tests")
 class DaggerTest {
   @DisplayName("Dagger DI runs as expected in the annotation processing phase")
+  @Execution(ExecutionMode.CONCURRENT)
   @JavacCompilerTest
+  @EcjCompilerTest
   void daggerDiRunsAsExpectedInTheAnnotationProcessingPhase(JctCompiler compiler) {
     // Given
-    def sources = newRamDirectory("sources")
+    def sources = newTempDirectory("sources")
         .createDirectory("org", "example")
         .copyContentsFrom("src", "test", "resources", "code")
 
     // When
     def compilation = compiler
         .addSourcePath(sources)
+        .fileManagerLoggingMode(LoggingMode.STACKTRACES)
+        .diagnosticLoggingMode(LoggingMode.STACKTRACES)
         .compile()
 
     // Then

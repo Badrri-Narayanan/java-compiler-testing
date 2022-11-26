@@ -20,6 +20,7 @@ import static io.github.ascopes.jct.pathwrappers.RamDirectory.newRamDirectory;
 import static io.github.ascopes.jct.pathwrappers.TempDirectory.newTempDirectory;
 
 import io.github.ascopes.jct.compilers.JctCompiler;
+import io.github.ascopes.jct.junit.EcjCompilerTest;
 import io.github.ascopes.jct.junit.JavacCompilerTest;
 import org.junit.jupiter.api.DisplayName;
 
@@ -70,7 +71,7 @@ class BasicModuleCompilationIntegrationTest {
         .isNotEmptyFile();
   }
 
-  @DisplayName("I can compile a 'Hello, World!' module program using a temporary directory")
+  @DisplayName("I can compile a 'Hello, World!' module program using a temporary directory (Javac)")
   @JavacCompilerTest(modules = true)
   void helloWorldUsingTempDirectory(JctCompiler<?, ?> compiler) {
     var sources = newTempDirectory("hello.world")
@@ -105,6 +106,47 @@ class BasicModuleCompilationIntegrationTest {
     assertThatCompilation(compilation)
         .classOutput()
         .packages()
+        .fileExists("module-info.class")
+        .isNotEmptyFile();
+  }
+
+  @DisplayName("I can compile a 'Hello, World!' module program using a temporary directory (ECJ)")
+  @EcjCompilerTest(modules = true)
+  void helloWorldUsingTempDirectoryForEcj(JctCompiler<?, ?> compiler) {
+    var sources = newTempDirectory("hello.world")
+        .createFile("com/example/HelloWorld.java").withContents(
+            "package com.example;",
+            "public class HelloWorld {",
+            "  public static void main(String[] args) {",
+            "    System.out.println(\"Hello, World\");",
+            "  }",
+            "}"
+        )
+        .and().createFile("module-info.java").withContents(
+            "module hello.world {",
+            "  requires java.base;",
+            "  exports com.example;",
+            "}"
+        );
+
+    var compilation = compiler
+        .addSourcePath(sources)
+        .compile();
+
+    assertThatCompilation(compilation)
+        .isSuccessfulWithoutWarnings();
+
+    assertThatCompilation(compilation)
+        .classOutput()
+        .modules()
+        .moduleExists("hello.world")
+        .fileExists("com/example/HelloWorld.class")
+        .isNotEmptyFile();
+
+    assertThatCompilation(compilation)
+        .classOutput()
+        .modules()
+        .moduleExists("hello.world")
         .fileExists("module-info.class")
         .isNotEmptyFile();
   }

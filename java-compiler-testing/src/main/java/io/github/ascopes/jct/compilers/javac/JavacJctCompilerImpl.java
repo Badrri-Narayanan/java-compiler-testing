@@ -32,14 +32,13 @@ import org.apiguardian.api.API.Status;
 @API(since = "0.0.1", status = Status.INTERNAL)
 public final class JavacJctCompilerImpl extends AbstractJctCompiler<JavacJctCompilerImpl> {
 
-  private static final String NAME = "JDK Compiler";
-
+  private static final String NAME = "jdk.compiler";
 
   /**
    * Initialize a new Java compiler.
    */
   public JavacJctCompilerImpl() {
-    this(ToolProvider.getSystemJavaCompiler());
+    this(newCompiler());
   }
 
   /**
@@ -57,7 +56,7 @@ public final class JavacJctCompilerImpl extends AbstractJctCompiler<JavacJctComp
    * @param name the name to give the compiler.
    */
   public JavacJctCompilerImpl(String name) {
-    this(name, ToolProvider.getSystemJavaCompiler());
+    this(name, newCompiler());
   }
 
   /**
@@ -101,5 +100,9 @@ public final class JavacJctCompilerImpl extends AbstractJctCompiler<JavacJctComp
    */
   public static int getLatestSupportedVersionInt(@SuppressWarnings("unused") boolean modules) {
     return SourceVersion.latestSupported().ordinal();
+  }
+
+  private static JavaCompiler newCompiler() {
+    return ToolProvider.getSystemJavaCompiler();
   }
 }

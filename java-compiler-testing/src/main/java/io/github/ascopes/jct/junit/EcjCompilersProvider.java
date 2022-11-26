@@ -16,41 +16,41 @@
 package io.github.ascopes.jct.junit;
 
 import io.github.ascopes.jct.compilers.JctCompiler;
+import io.github.ascopes.jct.compilers.ecj.EcjJctCompilerImpl;
 import io.github.ascopes.jct.compilers.javac.JavacJctCompilerImpl;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * Argument provider for the {@link JavacCompilerTest} annotation.
+ * Argument provider for the {@link EcjCompilerTest} annotation.
  *
  * @author Ashley Scopes
  * @since 0.0.1
  */
 @API(since = "0.0.1", status = Status.EXPERIMENTAL)
-public final class JavacCompilersProvider extends AbstractCompilersProvider<JavacCompilerTest> {
+public final class EcjCompilersProvider extends AbstractCompilersProvider<EcjCompilerTest> {
 
-  JavacCompilersProvider() {
+  EcjCompilersProvider() {
     // Do nothing, but keep this package private.
   }
 
   @Override
   protected JctCompiler<?, ?> compilerForVersion(int release) {
-    return new JavacJctCompilerImpl("jdk.compiler - targeting Java " + release)
-        .release(release);
+    return new EcjJctCompilerImpl("ecj - targeting Java " + release).release(release);
   }
 
   @Override
   protected int minSupportedVersion(boolean modules) {
-    return JavacJctCompilerImpl.getEarliestSupportedVersionInt(modules);
+    return EcjJctCompilerImpl.getEarliestSupportedVersionInt(modules);
   }
 
   @Override
   protected int maxSupportedVersion(boolean modules) {
-    return JavacJctCompilerImpl.getLatestSupportedVersionInt(modules);
+    return EcjJctCompilerImpl.getLatestSupportedVersionInt(modules);
   }
 
   @Override
-  public void accept(JavacCompilerTest javacCompilers) {
+  public void accept(EcjCompilerTest javacCompilers) {
     // Super is needed here to prevent IntelliJ getting confused.
     super.configure(
         javacCompilers.minVersion(),

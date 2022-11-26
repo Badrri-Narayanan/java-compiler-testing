@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.ascopes.jct.compilers.javac;
+package io.github.ascopes.jct.compilers.ecj;
 
 import io.github.ascopes.jct.compilers.AbstractJctFlagBuilder;
 import java.util.List;
@@ -22,18 +22,18 @@ import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 
 /**
- * Helper to build flags for a standard Javac implementation for the OpenJDK.
+ * Helper to build flags for the ECJ compiler.
  *
  * @author Ashley Scopes
  * @since 0.0.1
  */
 @API(since = "0.0.1", status = Status.INTERNAL)
-public final class JavacJctFlagBuilderImpl extends AbstractJctFlagBuilder {
+public final class EcjJctFlagBuilderImpl extends AbstractJctFlagBuilder {
 
   private static final String VERBOSE = "-verbose";
   private static final String ENABLE_PREVIEW = "--enable-preview";
   private static final String NOWARN = "-nowarn";
-  private static final String WERROR = "-Werror";
+  private static final String FAIL_ON_WARNING = "--failOnWarning";
   private static final String DEPRECATION = "-deprecation";
   private static final String RELEASE = "--release";
   private static final String SOURCE = "-source";
@@ -44,71 +44,71 @@ public final class JavacJctFlagBuilderImpl extends AbstractJctFlagBuilder {
   /**
    * Initialize this flag builder.
    */
-  public JavacJctFlagBuilderImpl() {
+  public EcjJctFlagBuilderImpl() {
   }
 
   @Override
-  public JavacJctFlagBuilderImpl verbose(boolean enabled) {
+  public EcjJctFlagBuilderImpl verbose(boolean enabled) {
     addFlagIfTrue(enabled, VERBOSE);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl previewFeatures(boolean enabled) {
+  public EcjJctFlagBuilderImpl previewFeatures(boolean enabled) {
     addFlagIfTrue(enabled, ENABLE_PREVIEW);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl showWarnings(boolean enabled) {
+  public EcjJctFlagBuilderImpl showWarnings(boolean enabled) {
     addFlagIfTrue(!enabled, NOWARN);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl failOnWarnings(boolean enabled) {
-    addFlagIfTrue(enabled, WERROR);
+  public EcjJctFlagBuilderImpl failOnWarnings(boolean enabled) {
+    addFlagIfTrue(enabled, FAIL_ON_WARNING);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl showDeprecationWarnings(boolean enabled) {
+  public EcjJctFlagBuilderImpl showDeprecationWarnings(boolean enabled) {
     addFlagIfTrue(enabled, DEPRECATION);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl release(@Nullable String version) {
+  public EcjJctFlagBuilderImpl release(@Nullable String version) {
     addVersionIfPresent(RELEASE, version);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl source(@Nullable String version) {
+  public EcjJctFlagBuilderImpl source(@Nullable String version) {
     addVersionIfPresent(SOURCE, version);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl target(@Nullable String version) {
+  public EcjJctFlagBuilderImpl target(@Nullable String version) {
     addVersionIfPresent(TARGET, version);
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl annotationProcessorOptions(List<String> options) {
+  public EcjJctFlagBuilderImpl annotationProcessorOptions(List<String> options) {
     options.forEach(option -> addFlag(ANNOTATION_OPT + option));
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl runtimeOptions(List<String> options) {
+  public EcjJctFlagBuilderImpl runtimeOptions(List<String> options) {
     options.forEach(option -> addFlag(RUNTIME_OPT + option));
     return this;
   }
 
   @Override
-  public JavacJctFlagBuilderImpl compilerOptions(List<String> options) {
+  public EcjJctFlagBuilderImpl compilerOptions(List<String> options) {
     options.forEach(this::addFlag);
     return this;
   }

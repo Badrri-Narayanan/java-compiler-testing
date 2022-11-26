@@ -87,6 +87,31 @@ public final class FileUtils {
   }
 
   /**
+   * Attempt to repair malformed binary names. This is used to work around the fact that ECJ
+   * passes around binary names that use forward-slashes as the delimiter rather than periods.
+   *
+   * @param binaryName the binary name to repair.
+   * @return the repaired binary name.
+   */
+  public static String repairBinaryName(String binaryName) {
+    var firstSlash = binaryName.indexOf('/');
+
+    if (firstSlash == - 1) {
+      // Nothing to do here.
+      return binaryName;
+    }
+
+    var sb = new StringBuilder().append(binaryName, 0, firstSlash);
+
+    for (var i = firstSlash; i < binaryName.length(); ++i) {
+      var next = binaryName.charAt(i);
+      sb.append(next == '/' ? '.' : next);
+    }
+
+    return sb.toString();
+  }
+
+  /**
    * Assert that the given name is a valid name for a directory, and that it does not contain
    * potentially dangerous characters such as double-dots or slashes that could be used to escape
    * the directory we are running from.

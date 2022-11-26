@@ -18,6 +18,8 @@ package io.github.ascopes.acceptancetests.manifold
 import io.github.ascopes.jct.compilers.JctCompiler
 import io.github.ascopes.jct.junit.JavacCompilerTest
 import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode
 
 import static io.github.ascopes.jct.assertions.JctAssertions.assertThatCompilation
 import static io.github.ascopes.jct.pathwrappers.TempDirectory.newTempDirectory
@@ -28,6 +30,7 @@ import static org.assertj.core.api.SoftAssertions.assertSoftly
 @SuppressWarnings(["GroovyAssignabilityCheck", "GrUnresolvedAccess"])
 class ManifoldTupleTest {
   @DisplayName("Tuple expressions compile as expected")
+  @Execution(ExecutionMode.SAME_THREAD)
   @JavacCompilerTest(configurers = [ManifoldPluginConfigurer])
   void tupleExpressionsCompileAsExpected(JctCompiler compiler) {
     // Given

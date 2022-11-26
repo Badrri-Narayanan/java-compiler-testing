@@ -20,6 +20,7 @@ import static io.github.ascopes.jct.pathwrappers.RamDirectory.newRamDirectory;
 import static io.github.ascopes.jct.pathwrappers.TempDirectory.newTempDirectory;
 
 import io.github.ascopes.jct.compilers.JctCompiler;
+import io.github.ascopes.jct.junit.EcjCompilerTest;
 import io.github.ascopes.jct.junit.JavacCompilerTest;
 import javax.tools.StandardLocation;
 import org.junit.jupiter.api.DisplayName;
@@ -71,6 +72,7 @@ class BasicMultiModuleCompilationIntegrationTest {
 
   @DisplayName("I can compile a single module using multi-module layout using a temp directory")
   @JavacCompilerTest(modules = true)
+  @EcjCompilerTest(modules = true)
   void singleModuleInMultiModuleLayoutTempDirectory(JctCompiler<?, ?> compiler) {
     var source = newTempDirectory("hello.world")
         .createFile("com/example/HelloWorld.java").withContents(
@@ -171,10 +173,11 @@ class BasicMultiModuleCompilationIntegrationTest {
 
   @DisplayName("I can compile multiple modules using multi-module layout using a temp directory")
   @JavacCompilerTest(modules = true)
+  // @EcjCompilerTest(modules = true)  -- ECJ has a bug in this by the looks.
   void multipleModulesInMultiModuleLayoutTempDirectory(JctCompiler<?, ?> compiler) {
     var helloWorld = newTempDirectory("hello.world")
-        .createFile("com/example/HelloWorld.java").withContents(
-            "package com.example;",
+        .createFile("com/example/helloworld/HelloWorld.java").withContents(
+            "package com.example.helloworld;",
             "import com.example.greeter.Greeter;",
             "public class HelloWorld {",
             "  public static void main(String[] args) {",
@@ -185,10 +188,10 @@ class BasicMultiModuleCompilationIntegrationTest {
         .and().createFile("module-info.java").withContents(
             "module hello.world {",
             "  requires greeter;",
-            "  exports com.example;",
+            "  exports com.example.helloworld;",
             "}"
         );
-    var greeter = newRamDirectory("greeter")
+    var greeter = newTempDirectory("greeter")
         .createFile("com/example/greeter/Greeter.java").withContents(
             "package com.example.greeter;",
             "public class Greeter {",
@@ -214,7 +217,7 @@ class BasicMultiModuleCompilationIntegrationTest {
     assertThatCompilation(compilation)
         .classOutput().modules()
         .moduleExists("hello.world")
-        .fileExists("com/example/HelloWorld.class").isNotEmptyFile();
+        .fileExists("com/example/helloworld/HelloWorld.class").isNotEmptyFile();
 
     assertThatCompilation(compilation)
         .classOutput().modules()

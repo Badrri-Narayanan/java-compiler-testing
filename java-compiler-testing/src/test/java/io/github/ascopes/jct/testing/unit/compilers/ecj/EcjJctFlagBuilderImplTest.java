@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.github.ascopes.jct.testing.unit.compilers.javac;
+package io.github.ascopes.jct.testing.unit.compilers.ecj;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import io.github.ascopes.jct.compilers.javac.JavacJctFlagBuilderImpl;
+import io.github.ascopes.jct.compilers.ecj.EcjJctFlagBuilderImpl;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -34,19 +34,19 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 /**
- * {@link JavacJctFlagBuilderImpl} tests.
+ * {@link EcjJctFlagBuilderImpl} tests.
  *
  * @author Ashley Scopes
  */
-@DisplayName("JavacJctFlagBuilderImpl tests")
+@DisplayName("EcjJctFlagBuilderImpl tests")
 @TestMethodOrder(OrderAnnotation.class)
-class JavacJctFlagBuilderImplTest {
+class EcjJctFlagBuilderImplTest {
 
-  JavacJctFlagBuilderImpl flagBuilder;
+  EcjJctFlagBuilderImpl flagBuilder;
 
   @BeforeEach
   void setUp() {
-    flagBuilder = new JavacJctFlagBuilderImpl();
+    flagBuilder = new EcjJctFlagBuilderImpl();
   }
 
   @DisplayName(".verbose(boolean) tests")
@@ -122,24 +122,24 @@ class JavacJctFlagBuilderImplTest {
   @Nested
   class FailOnWarningsFlagTest {
 
-    @DisplayName("Setting .failOnWarnings(true) adds the '-Werror' flag")
+    @DisplayName("Setting .failOnWarnings(true) adds the '--failOnWarning' flag")
     @Test
     void addsFlagIfTrue() {
       // When
       flagBuilder.failOnWarnings(true);
 
       // Then
-      assertThat(flagBuilder.build()).contains("-Werror");
+      assertThat(flagBuilder.build()).contains("--failOnWarning");
     }
 
-    @DisplayName("Setting .failOnWarnings(false) does not add the '-Werror'  flag")
+    @DisplayName("Setting .failOnWarnings(false) does not add the '--failOnWarning'  flag")
     @Test
     void doesNotAddFlagIfFalse() {
       // When
       flagBuilder.failOnWarnings(false);
 
       // Then
-      assertThat(flagBuilder.build()).doesNotContain("-Werror");
+      assertThat(flagBuilder.build()).doesNotContain("--failOnWarning");
     }
   }
 

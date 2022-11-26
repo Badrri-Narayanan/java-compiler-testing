@@ -54,7 +54,7 @@ class JavacJctCompilerImplTest {
   @Test
   void compilersHaveTheExpectedDefaultName() {
     // Then
-    assertThat(compiler.getName()).isEqualTo("JDK Compiler");
+    assertThat(compiler.getName()).isEqualTo("jdk.compiler");
   }
 
   @DisplayName("compilers have the expected JSR-199 compiler implementation")

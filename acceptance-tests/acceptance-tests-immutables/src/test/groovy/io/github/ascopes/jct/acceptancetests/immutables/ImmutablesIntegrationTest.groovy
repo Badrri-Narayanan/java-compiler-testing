@@ -16,6 +16,7 @@
 package io.github.ascopes.jct.acceptancetests.immutables
 
 import io.github.ascopes.jct.compilers.JctCompiler
+import io.github.ascopes.jct.junit.EcjCompilerTest
 import io.github.ascopes.jct.junit.JavacCompilerTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.parallel.Execution
@@ -39,6 +40,7 @@ class ImmutablesIntegrationTest {
 
   @DisplayName("Immutables @Value produces the expected class")
   @Execution(ExecutionMode.CONCURRENT)
+  @EcjCompilerTest
   @JavacCompilerTest
   void immutablesValueProducesTheExpectedClass(JctCompiler compiler) {
     // Given
@@ -74,6 +76,7 @@ class ImmutablesIntegrationTest {
 
   @DisplayName("Immutables @Value produces the expected class for modules")
   @Execution(ExecutionMode.CONCURRENT)
+  @EcjCompilerTest(modules = true)
   @JavacCompilerTest(modules = true)
   void immutablesValueProducesTheExpectedClassForModules(JctCompiler compiler) {
     // Given
